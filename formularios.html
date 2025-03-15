@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Vuelos y Hoteles</title>
+    <style>
+        .form-container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .error {
+            color: red;
+            display: none;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        input, select {
+            margin: 10px 0;
+            padding: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Registro de Vuelos</h2>
+    <form id="vueloForm" action="procesar.php" method="POST" onsubmit="return validarVuelo()">
+        <input type="hidden" name="tipo" value="vuelo">
+
+        <div>
+            <label for="origen">Origen:</label>
+            <input type="text" id="origen" name="origen" required>
+            <span id="errorOrigen" class="error">El origen es requerido</span>
+        </div>
+
+        <div>
+            <label for="destino">Destino:</label>
+            <input type="text" id="destino" name="destino" required>
+            <span id="errorDestino" class="error">El destino es requerido</span>
+        </div>
+
+        <div>
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+            <span id="errorFecha" class="error">La fecha debe ser futura</span>
+        </div>
+
+        <div>
+            <label for="plazas">Plazas Disponibles:</label>
+            <input type="number" id="plazas" name="plazas_disponibles" min="1" required>
+            <span id="errorPlazas" class="error">Debe ser mayor a 0</span>
+        </div>
+
+        <div>
+            <label for="precio">Precio:</label>
+            <input type="number" id="precio" name="precio" min="0" step="0.01" required>
+            <span id="errorPrecio" class="error">El precio debe ser mayor a 0</span>
+        </div>
+
+        <button type="submit">Registrar Vuelo</button>
+    </form>
+
+    <h2>Registro de Hoteles</h2>
+    <form id="hotelForm" action="procesar.php" method="POST" onsubmit="return validarHotel()">
+        <input type="hidden" name="tipo" value="hotel">
+
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <span id="errorNombre" class="error">El nombre es requerido</span>
+        </div>
+
+        <div>
+            <label for="ubicacion">Ubicación:</label>
+            <input type="text" id="ubicacion" name="ubicacion" required>
+            <span id="errorUbicacion" class="error">La ubicación es requerida</span>
+        </div>
+
+        <div>
+            <label for="habitaciones">Habitaciones Disponibles:</label>
+            <input type="number" id="habitaciones" name="habitaciones_disponibles" min="1" required>
+            <span id="errorHabitaciones" class="error">Debe ser mayor a 0</span>
+        </div>
+
+        <div>
+            <label for="tarifa">Tarifa por Noche:</label>
+            <input type="number" id="tarifa" name="tarifa_noche" min="0" step="0.01" required>
+            <span id="errorTarifa" class="error">La tarifa debe ser mayor a 0</span>
+        </div>
+
+        <button type="submit">Registrar Hotel</button>
+    </form>
+</div>
+
+<script>
+    function validarVuelo() {
+        let isValid = true;
+        const fecha = new Date(document.getElementById('fecha').value);
+        const hoy = new Date();
+
+        // Validar fecha futura
+        if (fecha <= hoy) {
+            document.getElementById('errorFecha').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('errorFecha').style.display = 'none';
+        }
+
+        // Validar origen y destino diferentes
+        const origen = document.getElementById('origen').value;
+        const destino = document.getElementById('destino').value;
+        if (origen.toLowerCase() === destino.toLowerCase()) {
+            document.getElementById('errorDestino').textContent = 'El destino debe ser diferente al origen';
+            document.getElementById('errorDestino').style.display = 'block';
+            isValid = false;
+        }
+
+        // Validar plazas y precio
+        const plazas = document.getElementById('plazas').value;
+        const precio = document.getElementById('precio').value;
+        if (plazas < 1) {
+            document.getElementById('errorPlazas').style.display = 'block';
+            isValid = false;
+        }
+        if (precio <= 0) {
+            document.getElementById('errorPrecio').style.display = 'block';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function validarHotel() {
+        let isValid = true;
+
+        // Validar nombre
+        const nombre = document.getElementById('nombre').value;
+        if (nombre.length < 3) {
+            document.getElementById('errorNombre').textContent = 'El nombre debe tener al menos 3 caracteres';
+            document.getElementById('errorNombre').style.display = 'block';
+            isValid = false;
+        }
+
+        // Validar habitaciones y tarifa
+        const habitaciones = document.getElementById('habitaciones').value;
+        const tarifa = document.getElementById('tarifa').value;
+        if (habitaciones < 1) {
+            document.getElementById('errorHabitaciones').style.display = 'block';
+            isValid = false;
+        }
+        if (tarifa <= 0) {
+            document.getElementById('errorTarifa').style.display = 'block';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+</script>
+</body>
+</html>

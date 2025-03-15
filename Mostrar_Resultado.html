@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Reservas</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Listado de Reservas</h2>
+  <?php
+        $stmt = $conexion->query($consultaReservas);
+  $reservas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  ?>
+  <table>
+    <tr>
+      <th>ID Reserva</th>
+      <th>ID Cliente</th>
+      <th>Origen</th>
+      <th>Destino</th>
+      <th>Fecha Vuelo</th>
+      <th>Hotel</th>
+      <th>Ubicación</th>
+    </tr>
+    <?php foreach ($reservas as $reserva): ?>
+    <tr>
+      <td><?php echo $reserva['id_reserva']; ?></td>
+      <td><?php echo $reserva['id_cliente']; ?></td>
+      <td><?php echo $reserva['origen']; ?></td>
+      <td><?php echo $reserva['destino']; ?></td>
+      <td><?php echo $reserva['fecha_vuelo']; ?></td>
+      <td><?php echo $reserva['hotel']; ?></td>
+      <td><?php echo $reserva['ubicacion']; ?></td>
+    </tr>
+    <?php endforeach; ?>
+  </table>
+
+  <h2>Hoteles con Más de Dos Reservas</h2>
+  <?php
+        $stmt = $conexion->query($consultaHoteles);
+  $hoteles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  ?>
+  <table>
+    <tr>
+      <th>Hotel</th>
+      <th>Ubicación</th>
+      <th>Total Reservas</th>
+    </tr>
+    <?php foreach ($hoteles as $hotel): ?>
+    <tr>
+      <td><?php echo $hotel['nombre']; ?></td>
+      <td><?php echo $hotel['ubicacion']; ?></td>
+      <td><?php echo $hotel['total_reservas']; ?></td>
+    </tr>
+    <?php endforeach; ?>
+  </table>
+</div>
+</body>
+</html>
